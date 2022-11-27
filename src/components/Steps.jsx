@@ -1,13 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Steps = () => {
   const [steps, setSteps] = useState([]);
   const [date, setDate] = useState("");
-  const [distance, setDistance] = useState(null);
+  const [distance, setDistance] = useState(0);
 
   const ChangeDate = (e) => {
     setDate((prev) => (prev = e.target.value));
-    // console.log(date);
   };
 
   const CangeDistance = (e) => {
@@ -15,7 +14,10 @@ const Steps = () => {
   };
 
   const sortSteps = () => {
-    steps.sort((a, b) => {
+    if (!steps) {
+      return null
+    }
+    setSteps(prev => prev.sort((a, b) => {
       if (a.date.split("-")[2] === b.date.split("-")[2]) {
         if (a.date.split("-")[1] === b.date.split("-")[1]) {
           if (a.date.split("-")[0] > b.date.split("-")[0]) {
@@ -29,20 +31,21 @@ const Steps = () => {
       if (a.date.split("-")[2] > b.date.split("-")[2]) {
         return -1;
       }
-    });
+    }));
   };
+
+
 
   const editStep = (id) => {
     setDate(
       (prev) =>
-        (prev = steps
-          .map((item) => (item.id === id ? item.date : ""))
-          .join("-")
-          .split("-")
-          .reverse()
-          .join("-"))
+      (prev = steps
+        .map((item) => (item.id === id ? item.date : ""))
+        .join("-")
+        .split("-")
+        .reverse()
+        .join("-"))
     );
-    // console.log(date);
   };
 
   const removeStep = (id) => {
@@ -52,11 +55,11 @@ const Steps = () => {
   const editDistance = () => {
     setSteps(
       (prev) =>
-        (prev = steps.map((item) =>
-          item.id === date
-            ? { ...item, distance: item.distance + +distance }
-            : { ...item }
-        ))
+      (prev = steps.map((item) =>
+        item.id === date
+          ? { ...item, distance: item.distance + +distance }
+          : { ...item }
+      ))
     );
   };
 
@@ -67,10 +70,10 @@ const Steps = () => {
         if (steps.find((item) => item.id === date) ? false : true) {
           setSteps(
             (prev) =>
-              (prev = [
-                ...steps,
-                { id: date, date: dateRu, distance: +distance },
-              ])
+            (prev = [
+              ...steps,
+              { id: date, date: dateRu, distance: +distance },
+            ])
           );
         } else {
           editDistance();
@@ -79,8 +82,9 @@ const Steps = () => {
     }
     setDate("");
     setDistance(0);
-    sortSteps();
+    sortSteps()
   };
+
 
   return (
     <main className="steps-wrapper">
